@@ -13,8 +13,14 @@
 		966891D42700CA1400EDF73E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 966891D32700CA1400EDF73E /* Preview Assets.xcassets */; };
 		966891DD2700D6A500EDF73E /* PresetVm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891DC2700D6A500EDF73E /* PresetVm.swift */; };
 		966891DF2700D6FC00EDF73E /* NewPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891DE2700D6FC00EDF73E /* NewPreset.swift */; };
+		966F4D512703145E00FBC59B /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F4D502703145E00FBC59B /* StringUtils.swift */; };
+		966F4D53270315C200FBC59B /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F4D52270315C200FBC59B /* DateUtils.swift */; };
+		966F4D5A27049DF500FBC59B /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F4D5927049DF500FBC59B /* AppStore.swift */; };
 		966F921C2701C9C500B8F959 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F921B2701C9C500B8F959 /* ImagePicker.swift */; };
 		966F921E2701CAE400B8F959 /* NewPresetVm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F921D2701CAE400B8F959 /* NewPresetVm.swift */; };
+		966F92232701E88200B8F959 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F92222701E88200B8F959 /* LocalStorage.swift */; };
+		966F92252701EA5900B8F959 /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F92242701EA5900B8F959 /* AppSession.swift */; };
+		96EFA30827060FFE00F296C7 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EFA30727060FFE00F296C7 /* Buttons.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +32,14 @@
 		966891D52700CA1400EDF73E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		966891DC2700D6A500EDF73E /* PresetVm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetVm.swift; sourceTree = "<group>"; };
 		966891DE2700D6FC00EDF73E /* NewPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPreset.swift; sourceTree = "<group>"; };
+		966F4D502703145E00FBC59B /* StringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUtils.swift; sourceTree = "<group>"; };
+		966F4D52270315C200FBC59B /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
+		966F4D5927049DF500FBC59B /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		966F921B2701C9C500B8F959 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		966F921D2701CAE400B8F959 /* NewPresetVm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPresetVm.swift; sourceTree = "<group>"; };
+		966F92222701E88200B8F959 /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
+		966F92242701EA5900B8F959 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
+		96EFA30727060FFE00F296C7 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +78,8 @@
 				966891D02700CA1400EDF73E /* Assets.xcassets */,
 				966891D52700CA1400EDF73E /* Info.plist */,
 				966891D22700CA1400EDF73E /* Preview Content */,
+				966F92242701EA5900B8F959 /* AppSession.swift */,
+				966F4D5927049DF500FBC59B /* AppStore.swift */,
 			);
 			path = "Synth Lib";
 			sourceTree = "<group>";
@@ -92,6 +106,7 @@
 		966F92192701C9A700B8F959 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				966F92212701E86F00B8F959 /* Utils */,
 				966F921A2701C9B200B8F959 /* UI */,
 			);
 			path = Common;
@@ -101,8 +116,19 @@
 			isa = PBXGroup;
 			children = (
 				966F921B2701C9C500B8F959 /* ImagePicker.swift */,
+				96EFA30727060FFE00F296C7 /* Buttons.swift */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		966F92212701E86F00B8F959 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				966F92222701E88200B8F959 /* LocalStorage.swift */,
+				966F4D502703145E00FBC59B /* StringUtils.swift */,
+				966F4D52270315C200FBC59B /* DateUtils.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -121,6 +147,8 @@
 			dependencies = (
 			);
 			name = "Synth Lib";
+			packageProductDependencies = (
+			);
 			productName = "Synth Lib";
 			productReference = 966891C92700CA1400EDF73E /* Synth Lib.app */;
 			productType = "com.apple.product-type.application";
@@ -148,6 +176,8 @@
 				Base,
 			);
 			mainGroup = 966891C02700CA1400EDF73E;
+			packageReferences = (
+			);
 			productRefGroup = 966891CA2700CA1400EDF73E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -174,11 +204,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				966F4D512703145E00FBC59B /* StringUtils.swift in Sources */,
+				966F92252701EA5900B8F959 /* AppSession.swift in Sources */,
 				966891CF2700CA1400EDF73E /* PresetList.swift in Sources */,
+				96EFA30827060FFE00F296C7 /* Buttons.swift in Sources */,
 				966891DD2700D6A500EDF73E /* PresetVm.swift in Sources */,
 				966F921E2701CAE400B8F959 /* NewPresetVm.swift in Sources */,
+				966F92232701E88200B8F959 /* LocalStorage.swift in Sources */,
 				966F921C2701C9C500B8F959 /* ImagePicker.swift in Sources */,
+				966F4D53270315C200FBC59B /* DateUtils.swift in Sources */,
 				966891CD2700CA1400EDF73E /* Synth_LibApp.swift in Sources */,
+				966F4D5A27049DF500FBC59B /* AppStore.swift in Sources */,
 				966891DF2700D6FC00EDF73E /* NewPreset.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,7 +273,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -292,7 +328,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

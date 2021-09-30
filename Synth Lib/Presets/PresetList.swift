@@ -15,9 +15,8 @@ struct PresetList: View {
         
         NavigationView {
             VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, content: {
-                /*@START_MENU_TOKEN@*/Text("Placeholder")/*@END_MENU_TOKEN@*/
-                Text("Hello, world!")
-                    .padding()
+                Text("Placeholder")
+                Text("Hello, world!").padding()
             })
             .navigationBarItems(trailing:
                                     NavigationLink(destination: NewPreset()) {
