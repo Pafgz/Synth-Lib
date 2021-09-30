@@ -7,11 +7,17 @@
 
 import SwiftUI
 
+
 @main
 struct Synth_LibApp: App {
+    
+    let appStore: AppStore = AppStore()
+    
     var body: some Scene {
         WindowGroup {
             PresetList()
+                .background(Color.green)
+                .ignoresSafeArea()
         }
     }
 }
