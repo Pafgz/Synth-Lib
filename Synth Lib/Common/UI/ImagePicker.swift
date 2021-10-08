@@ -45,8 +45,8 @@ struct ImagePicker: UIViewControllerRepresentable {
 
             if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
                 parent.image = image
+                print("Image loaded")
             }
-
             parent.presentationMode.wrappedValue.dismiss()
         }
 

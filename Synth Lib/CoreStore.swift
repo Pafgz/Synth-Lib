@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AppStore: ObservableObject {
+class CoreStore: ObservableObject {
     
     let localStorage: LocalStorage
     

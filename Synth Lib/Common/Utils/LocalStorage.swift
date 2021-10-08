@@ -14,7 +14,7 @@ public class LocalStorage: ObservableObject {
     let fileManager = FileManager.default
 
     func saveImage(inputImage: UIImage, presetId: String) throws -> Data? {
-        let imageName = "image\(Date().currentTimeMillis())"
+        let imageName = "image\(Date().currentTimeMillis)"
         if let image = inputImage.jpegData(compressionQuality: 1.0) {
             
             if let folderUrl = createFolder(folderName: presetId) {
@@ -27,7 +27,6 @@ public class LocalStorage: ObservableObject {
         } 
         return nil
     }
-    
     
     func getImages(presetId: String) -> [Data]? {
         let path = getDocumentsDirectory().path + "/" + presetId
@@ -44,7 +43,6 @@ public class LocalStorage: ObservableObject {
                 )
                 
             }
-            
             return images
         } catch {
             print("Failed to read the folder")
@@ -52,14 +50,9 @@ public class LocalStorage: ObservableObject {
         return nil
     }
     
-    func loadImage() {
-        
+    func savePreset(preset: Preset) {
         
     }
-    
-//    func getImages(presetId: Int) -> [UIImage] {
-//       return nil
-//   }
     
     private func createFolder(folderName: String) -> URL? {
         
@@ -84,67 +77,4 @@ public class LocalStorage: ObservableObject {
         let paths = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
     }
-}
-
-class ImageSaver: NSObject {
-    func writeToPhotoAlbum(image: UIImage) {
-        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveError), nil)
-    }
-
-    @objc func saveError(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        print("Save finished!")
-    }
-}
-
-class CustomPhotoAlbum {
-
-    static let albumName = "Synth Lib Presets"
-    static let sharedInstance = CustomPhotoAlbum()
-
-    var assetCollection: PHAssetCollection!
-
-    init() {
-
-        func fetchAssetCollectionForAlbum() -> PHAssetCollection! {
-
-//            let fetchOptions = PHFetchOptions()
-//            fetchOptions.predicate = NSPredicate(format: "title = %@", CustomPhotoAlbum.albumName)
-//            let collection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
-//
-//            if let firstObject: AnyObject = collection.firstObject {
-//                return collection.firstObject as! PHAssetCollection
-//            }
-
-            return nil
-        }
-
-        if let assetCollection = fetchAssetCollectionForAlbum() {
-            self.assetCollection = assetCollection
-            return
-        }
-
-        PHPhotoLibrary.shared().performChanges({
-            PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: CustomPhotoAlbum.albumName)
-        }) { success, _ in
-            if success {
-                self.assetCollection = fetchAssetCollectionForAlbum()
-            }
-        }
-    }
-
-    func saveImage(image: UIImage) {
-
-        if assetCollection == nil {
-            return   // If there was an error upstream, skip the save.
-        }
-
-        PHPhotoLibrary.shared().performChanges({
-            let assetChangeRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
-            let assetPlaceholder = assetChangeRequest.placeholderForCreatedAsset
-            let albumChangeRequest = PHAssetCollectionChangeRequest(for: self.assetCollection)
-            albumChangeRequest?.addAssets([assetPlaceholder] as NSFastEnumeration)
-        }, completionHandler: nil)
-    }
-
-
 }

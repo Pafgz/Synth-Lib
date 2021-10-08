@@ -8,7 +8,7 @@
 import Foundation
 
 extension Date {
-    func currentTimeMillis() -> Int64 {
+    var currentTimeMillis: Int64 {
         return Int64(self.timeIntervalSince1970 * 1000)
     }
 }
