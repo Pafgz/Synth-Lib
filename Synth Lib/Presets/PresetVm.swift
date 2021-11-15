@@ -14,46 +14,27 @@ public class PresetVm : ObservableObject {
     
     private var dbManager: CoreDataManager?
     
+    private var cancellable: AnyCancellable?
+    
     @Published var presets = [Preset]()
     
-    init() {
-//        let didSaveNotification = NSManagedObjectContext.didSaveObjectsNotification
-//        NotificationCenter.default.addObserver(
-//            self,
-//            selector: #selector(didSave(_:)),
-//            name: didSaveNotification, object: nil
-//        )
-    }
+    @Published var selectedPreset: Preset = Preset(id: UUID(), name: "Unamed Preset")
     
     func setup(coreDataManager: CoreDataManager) {
         dbManager = coreDataManager
-        loadPresets()
-        listenToPresetUpdates()
-    }
-    
-    func loadPresets() {
-        do {
-            if let dbManager = dbManager {
-                presets = try dbManager.loadPresets()
-                print("Loaded \(presets.count)")
+        if let dbManager = dbManager {
+            cancellable = dbManager.$presetList.sink { values in
+                self.presets = values.compactMap { entity in
+                    entity.asPreset
+                }
             }
-        } catch {
-            print("Error retrieving presets")
         }
     }
     
-    private var presetUpdateListener: [AnyCancellable] = []
-    
-    func listenToPresetUpdates(){
-        NotificationCenter.default.publisher(for: .updatePresets)
-            .map{$0.object as! Bool}
-            .sink { isUpdated in
-                self.loadPresets()
-            }.store(in: &presetUpdateListener)
+    func updateNewPresetName(name: String) {
+        selectedPreset = Preset(id: UUID(), name: name)
+        print("New name: " + selectedPreset.name)
     }
-}
-
-extension Notification.Name {
-    static let updatePresets = Notification.Name("updatePresets")
     
+    private var presetUpdateListener: [AnyCancellable] = []
 }

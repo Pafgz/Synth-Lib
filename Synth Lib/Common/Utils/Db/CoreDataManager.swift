@@ -10,10 +10,12 @@ import CoreData
 import UIKit
 import SwiftUI
 
+
 class CoreDataManager: ObservableObject {
     
     static let shared = CoreDataManager()
     
+    @Published var presetList = Array<PresetEntity>()
     
     lazy var container: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "DataModel")
@@ -23,34 +25,42 @@ class CoreDataManager: ObservableObject {
         return container
     }()
     
-    func savePreset(preset: Preset) throws {
-        if let entity = try? loadPresetEntities(
-            predicate: NSPredicate(format: "presetId LIKE %@", preset.id)
-        ).first {
-            entity.presetId = preset.id
+    init() {
+        loadPresets()
+    }
+    
+    func savePreset(preset: Preset) throws -> Preset {
+        let outputPreset: Preset
+        if let entity = try? loadPresetEntity(with: preset.id) {
+            print("Updating \(preset.name)")
             entity.name = preset.name
             entity.hasDemo = NSNumber.init(value: preset.hasDemo)
             preset.tagList.forEach { tag in
                 let tagEntity = createTag(tagName: tag.name, presetEntity: entity)
                 entity.addToTags(tagEntity)
             }
+            updatePresetInList(entity: entity)
+            outputPreset = entity.asPreset
         }
         else {
+            print("Creating a new Preset")
             let entity = PresetEntity(context: context())
             entity.id = UUID()
-            entity.presetId = preset.id
             entity.name = preset.name
             entity.hasDemo = NSNumber.init(value: preset.hasDemo)
             preset.tagList.forEach { tag in
                 let tagEntity = createTag(tagName: tag.name, presetEntity: entity)
                 entity.addToTags(tagEntity)
             }
+            presetList.append(entity)
+            outputPreset = entity.asPreset
         }
         
         save(onConflict: {
             print("Conflicts saving \(preset.name)")
         })
         print("Saved \(preset.name)")
+        return outputPreset
     }
     
     func createTag(tagName: String, presetEntity: PresetEntity?) -> TagEntity {
@@ -85,12 +95,35 @@ class CoreDataManager: ObservableObject {
         }
     }
     
-    func loadPresets() throws -> [Preset] {
-        return try loadPresets(predicate: nil)
+    func deletePreset(preset: Preset) {
+        if let index = presetList.firstIndex(where: { $0.id == preset.id }) {
+            let entity = presetList[index]
+            context().delete(entity)
+            presetList.remove(at: index)
+            print("Deleted from DB \(entity.name)")
+        }
     }
     
-    func loadPresets(with id: String) throws -> [Preset] {
-        return try loadPresetWithFilter(key: "presetId", value: id)
+    func loadPresets() -> [Preset] {
+        var list: [Preset] = []
+        do {
+            presetList = try loadPresetEntities(predicate: nil)
+            list = presetList.compactMap { $0.asPreset }
+        } catch let error as NSError {
+            print("Error: \(error), \(error.localizedDescription)")
+        }
+        return list
+    }
+    
+    func loadPreset(with id: UUID) throws -> Preset? {
+        let result = try loadPresetEntity(with: id)
+        print("loaded \(result?.name) presets")
+        return result?.asPreset
+    }
+    
+    func loadPresetEntity(with id: UUID) throws -> PresetEntity? {
+        let predicate = NSPredicate(format: "id == %@", id as NSUUID)
+        return try loadPresetEntities(predicate: predicate).first
     }
     
     func loadPresets(named name: String) throws -> [Preset] {
@@ -106,8 +139,6 @@ class CoreDataManager: ObservableObject {
             entity.asPreset
         }
     }
-    
-    
     
     private func loadPresetEntities(predicate: NSPredicate? = nil) throws -> [PresetEntity] {
         let request = PresetEntity.fetchRequest()
@@ -144,6 +175,13 @@ class CoreDataManager: ObservableObject {
         }
     }
     
+    private func updatePresetInList(entity: PresetEntity) {
+        if let i = presetList.firstIndex(where: { $0.id == entity.id }) {
+            presetList[i] = entity
+            print("Preset at \(i) is \(presetList[i].name)")
+        }
+    }
+    
     func backgroundContext() -> NSManagedObjectContext {
         return container.newBackgroundContext()
     }
@@ -155,19 +193,15 @@ class CoreDataManager: ObservableObject {
 
 extension PresetEntity {
     public var tagList: [TagEntity] {
-         if let tags = tags {
+        if let tags = tags {
             return tags.allObjects as! Array<TagEntity>
         } else {
             return []
         }
     }
-
-    var asPreset: Preset? {
-        if let id = presetId {
-            return Preset(id: id, name: presetName, hasDemo: hasDemo?.boolValue ?? false)
-        } else {
-            return nil
-        }
+    
+    var asPreset: Preset {
+        return Preset(id: id ?? UUID(), name: presetName, hasDemo: hasDemo?.boolValue ?? false, creationDate: creationDate)
     }
     
     var presetName: String {
@@ -183,7 +217,7 @@ extension TagEntity {
             return []
         }
     }
-
+    
     var asTag: Tag? {
         if let id = id {
             return Tag(id: id, name: tagName)

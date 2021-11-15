@@ -10,9 +10,9 @@ import Combine
 
 struct PresetDetails: View {
     
-    var preset: Preset? = nil
+    var preset: Preset
     
-    @ObservedObject var vm = PresetDetailsVm()
+    @StateObject var vm = PresetDetailsVm()
     @EnvironmentObject var localStorage: LocalStorage
     @EnvironmentObject var dbManager: CoreDataManager
     
@@ -20,86 +20,105 @@ struct PresetDetails: View {
     @State private var showNewImageSheet = false
     @State private var newPhoto: UIImage?
     @State private var photoSource: UIImagePickerController.SourceType = .photoLibrary
+    @State private var isEditMode = false
+    @State private var isDeleted = false
     
-    @State private var hasEdited = false
-    
-    //Needed just because if the textfield is the first view, we can't click on it
-    @State private var fieldValue = ""
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
         
         let presetName: Binding<String> = Binding { () -> String in
-            return vm.preset.name
+            return vm.preset?.name ?? "No name"
         } set: { value in
-            vm.preset.name = value
-            vm.hasChanges = true
+            print("Changing name with " + value)
+            vm.updateName(name: value)
         }
         
-        ScrollView {
-            VStack() {
-                
-                TextField("", text: $fieldValue)
-                    .padding(.top, 40)
-                
-                TextField("Preset Name", text: presetName)  { result in
-                    print("\(result) and \(presetName)")
-                }
-                .font(.system(size: 32))
-                .padding(.top, 10)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 16)
-                .multilineTextAlignment(.center)
-                
-                if(vm.images.isEmpty) {
-                    Button(action: {
-                        showNewImageSheet = true
-                    }) {
-                        AddImageItem()
-                            .frame(width: 250, height: 250)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                    }
-                } else if (vm.images.count == 1) {
-                    PresetImage(viewImage: vm.images.first)
-                } else {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(vm.images) { image in
-                                Button(action: {
-                                    
-                                }) {
-                                    PresetImage(viewImage: image)
+        ZStack {
+            AppColors.DarkBlue.ignoresSafeArea()
+            ScrollView {
+                VStack() {
+                    TextField("Preset Name", text: presetName, onCommit: {
+                        print("Saving preset after changing the name")
+                        vm.savePreset()
+                    })
+                        .foregroundColor(Color.white)
+                        .font(.system(size: 32))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 16)
+                        .contentShape(Rectangle())
+                    
+                    if(vm.images.isEmpty) {
+                        Button(action: {
+                            showNewImageSheet = true
+                        }) {
+                            AddImageItem()
+                        }
+                    } else if vm.images.count == 1 {
+                        if let image = vm.images.first {
+                            PresetImage(image: image, showDeleteButton: isEditMode, onDelete: { image in vm.deleteImage(image: image)}, onClick: { image in })
+                        }
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(vm.images) { image in
+                                    PresetImage(image: image, showDeleteButton: isEditMode,
+                                                onDelete: { image in
+                                        vm.deleteImage(image: image)
+                                        
+                                    },
+                                                onClick: { image in
+                                        
+                                    })
                                 }
                             }
                         }
-                    }.padding(.horizontal, 16)
+                    }
                 }
                 
-                if (!vm.preset.tagList.isEmpty) {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        List() {
-                            ForEach(vm.preset.tagList) { tag in
-                                TagView(tag: tag) { _ in }
-                            }
-                        }
-                    }.padding(.horizontal, 16)
-                }
-                
-                Button(action: {
+                AppButton(text: "Add a picture", width: 250) {
                     showNewImageSheet = true
-                }) {
-                    AppButton(text: "Add a picture", bgColor: Color.green)
-                        .padding(16)
                 }
+
+
+                if let tagList = vm.preset?.tagList {
+                    if (!tagList.isEmpty) {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            List() {
+                                ForEach(tagList) { tag in
+                                    TagView(tag: tag) { _ in }
+                                }
+                            }
+                        }.padding(.horizontal, 16)
+                    }
+                }
+                
+                Spacer()
                 
                 Text("Sound demos")
                     .font(.system(size: 28))
                     .padding(.top, 8)
+                    .foregroundColor(Color.white)
+                
+                Spacer()
+                
+                if(isEditMode) {
+                    AppButton(text: "Delete Preset", bgColor: AppColors.Red) {
+                        isDeleted = vm.deletePreset()
+                        if(isDeleted) {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                    .padding(16)
+                }
                 
                 Spacer()
             }
-        }.sheet(isPresented: $showImagePicker, onDismiss:{
+        }
+        .sheet(isPresented: $showImagePicker, onDismiss:{
             if let newPhoto = newPhoto {
-                vm.addPhotoToPreset(inputImage: newPhoto)
+                vm.storePicture(inputImage: newPhoto)
             }
         }) {
             ImagePicker(sourceType: photoSource, image: $newPhoto)
@@ -117,21 +136,16 @@ struct PresetDetails: View {
                 .cancel()
             ])
         }
-        .navigationBarItems(trailing: HStack {
-            if(vm.hasChanges) {
-                Button(action: {
-                    vm.savePreset()
-                }) {
-                    Text("Save")
-                }
-            } else {
-                Spacer()
-            }
+        .navigationBarItems(trailing:
+                                Button(action: {
+            isEditMode = !isEditMode
+        }) {
+            Text("Edit")
         })
-        .onAppear {
+        .onAppear(perform: {
+            print(preset.name)
             vm.setup(coreDataManager: dbManager, currentPreset: preset)
-        }
-        .ignoresSafeArea()
+        })
     }
 }
 
@@ -139,7 +153,7 @@ struct PresetDetails_Previews: PreviewProvider {
     static var previews: some View {
         let db = CoreDataManager.shared
         Group {
-            PresetDetails()
+            PresetDetails(preset: PresetPreviewData.preset1)
                 .previewDevice(PreviewDevice(rawValue: "iPhone 6s"))
                 .previewDisplayName("iPhone 6s")
                 .environmentObject(db)
@@ -150,7 +164,7 @@ struct PresetDetails_Previews: PreviewProvider {
 struct PresetDetailsWithPreset_Previews: PreviewProvider {
     static var previews: some View {
         let db = CoreDataManager.shared
-        let preset = Preset(id: "43725rtyegiw", name: "Peneloppe Horns", tagList: [
+        let preset = Preset(id: UUID(), name: "Peneloppe Horns", tagList: [
             Tag(name: "Horn"),
             Tag(name: "Air"),
             Tag(name: "Pad"),
@@ -178,9 +192,11 @@ struct AddImageItem: View  {
                     .scaledToFill()
                     .padding(.all, 64)
                     .foregroundColor(Color.white)
-                    .background(Color.gray.opacity(0.99))
+                    .background(AppColors.LightGrey)
             }
         }
+        .frame(width: 250, height: 250, alignment: .center)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
 
@@ -193,18 +209,46 @@ struct AddImageItem_Previews: PreviewProvider {
 
 struct PresetImage: View  {
     
-    var viewImage: ViewImage? = nil
+    var image: AppImageData
+    var showDeleteButton = false
+    var onDelete: (AppImageData) -> Void
+    var onClick: (AppImageData) -> Void
     
     public var body: some View {
-        if let image = viewImage?.image {
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 250, height: 250)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+        if let image = image.asUIImage() {
+            let imageView = ZStack {
+                Button(action: { onClick(self.image) }) {
+                    Image(uiImage: image)
+                        .resizable()
+                        .centerCropped()
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .frame(width: 250, height: 250, alignment: .center)
+                        .clipped()
+                }
+            }.frame(width: 260, height: 260)
+            
+            if(showDeleteButton) {
+                imageView.overlay(Button(action: {
+                    onDelete(self.image)
+                }) {
+                    ZStack {
+                        AppColors.DarkGrey
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                    }
+                }
+                                    .clipShape(Circle())
+                                    .frame(width: 40, height: 40, alignment: .topTrailing),
+                                  alignment: .topTrailing
+                )
+            } else {
+                imageView
+            }
         }
     }
 }
+
 
 struct TagView: View  {
     

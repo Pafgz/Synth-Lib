@@ -8,9 +8,10 @@
 import Foundation
 import UIKit
 
-struct Preset: Identifiable {
-    var id: String
+struct Preset:Identifiable {
+    var id: UUID
     var name: String
     var hasDemo: Bool = false
     var tagList: [Tag] = []
+    var creationDate: Date? = nil
 }

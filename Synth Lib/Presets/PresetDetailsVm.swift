@@ -10,9 +10,7 @@ import SwiftUI
 
 public class PresetDetailsVm : ObservableObject {
     
-    @Published var images = [ViewImage]()
-    
-    @Published var hasChanges = false
+    @Published var images = [AppImageData]()
     
     private let notif = NotificationCenter.default
     
@@ -20,108 +18,97 @@ public class PresetDetailsVm : ObservableObject {
     
     private var dbManager: CoreDataManager?
     
-    @Published var preset: Preset
+    @Published var preset: Preset? = nil
     
-    init() {
-        let presetId = "Preset" + String.randomString(length: 5) + "\(Date().currentTimeMillis)"
-        preset = Preset(id: presetId, name: presetId)
-    }
+    //    init() {
+    //        preset = Preset(id: UUID(), name: "")
+    //    }
     
     func setup(coreDataManager: CoreDataManager, currentPreset: Preset?) {
-        dbManager = coreDataManager
-        if let currentPreset = currentPreset {
-            preset = currentPreset
-            loadImages()
+        if(dbManager == nil) {
+            dbManager = coreDataManager
+            if let currentPreset = currentPreset {
+                print("Opened " + currentPreset.name)
+                do {
+                    if let existingPreset = try? dbManager!.loadPreset(with: currentPreset.id) {
+                        preset = existingPreset
+                    } else {
+                        preset = try! dbManager!.savePreset(preset: currentPreset)
+                    }
+                }
+                loadImages()
+            } else {
+                print("Opened Nothing")
+            }
         }
     }
     
     func storePicture(inputImage: UIImage) {
-        if let imageData = try? storage.saveImage(inputImage: inputImage, presetId: preset.id) {
-            if let image = imageData.asViewImage() {
-                image.isSaved = true
-                hasChanges = true
+        if let preset = preset {
+            if let imageData = try? storage.saveImage(inputImage: inputImage, presetId: preset.id) {
+                images.append(imageData)
             }
         }
-    }
-    
-    func storeAllPictures(pictureList: [ViewImage]) {
-        pictureList.filter{ image in
-            !image.isSaved
-        }.forEachIndexed { index, image in
-                let result = try? storage.saveImage(inputImage: image.image, presetId: preset.id)
-                if let result = result {
-                    pictureList[index].isSaved = true
-                    print("picture \(index) is saved")
-                }
-        }
-    }
-    
-    func addPhotoToPreset(inputImage: UIImage) {
-        images.append(ViewImage(image: inputImage))
-        hasChanges = true
-        print("Photo added to preset")
     }
     
     func updateName(name: String) {
-        preset.name = name
-        hasChanges = true
-        print("Name updated")
+        if let preset = preset {
+            self.preset!.name = name
+            print("Name updated with " + preset.name)
+        }
     }
     
     func savePreset() {
-        if let dbManager = dbManager {
-            do {
-                try dbManager.savePreset(preset: preset)
-                storeAllPictures(pictureList: images)
-                sendUpdate()
-            } catch {
-                print("Error saving a preset")
+        if let preset = preset {
+            if let dbManager = dbManager {
+                do {
+                    try self.preset = dbManager.savePreset(preset: preset)
+                    print("Preset Saved")
+                } catch {
+                    print("Error saving a preset")
+                }
             }
         }
-    }
-    
-    func sendUpdate(){
-        notif.post(name: .updatePresets, object: true)
     }
     
     func loadImages() {
-        let dataList: [Data] = storage.getImages(presetId: preset.id) ?? []
-        let imageList: [ViewImage] = dataList.compactMap { data in
-            if let image = UIImage(data: data) {
-                
-                return ViewImage(image: image, isSaved: true)
-            } else {
-                return nil
+        if let preset = preset {
+            images = storage.getImages(presetId: preset.id) ?? []
+            print("images loaded")
+        }
+    }
+    
+    func deletePreset() -> Bool {
+        if let preset = preset {
+            storage.deleteFolder(presetId: preset.id)
+            dbManager?.deletePreset(preset: preset)
+            return true
+        }
+        return false
+    }
+    
+    func deleteImage(image: AppImageData) {
+        if let preset = preset {
+            let isDeleted = storage.deletePicture(image: image, presetId: preset.id)
+            if(isDeleted) {
+                let i = images.firstIndex { item in
+                    item.path == image.path
+                }
+                if let index = i {
+                    images.remove(at: index)
+                }
             }
         }
-        images = imageList
-        print("images loaded")
     }
 }
 
-class ViewImage: Identifiable {
-    var id = UUID()
-    var image: UIImage
-    var isSaved: Bool = false
-    
-    init(image: UIImage, isSaved: Bool = false) {
-        self.image = image
-        self.isSaved = isSaved
-    }
-}
-
-extension Data {
-    func asViewImage() -> ViewImage? {
-        if let image = UIImage(data: self) {
-            return ViewImage(image: image)
-        } else {
-            return nil
-        }
+extension AppImageData {
+    func asUIImage() -> UIImage? {
+        return UIImage(data: data) ?? nil
     }
 }
 
 extension Array {
-    
     public func forEachIndexed(body: (Int, Element) -> Void) {
         for (index, element) in enumerated() {
             body(index, element)

@@ -13,15 +13,15 @@ import CoreData
 struct Synth_LibApp: App {
     
     let appStore: CoreStore = CoreStore()
-    let db = CoreDataManager.shared
+    @StateObject var db = CoreDataManager.shared
     
     @Environment(\.scenePhase) var scenePhase
     
     var body: some Scene {
         WindowGroup {
-            PresetList()
+            PresetListHome()
                 .environmentObject(db)
-                .background(Color.green)
+                .background(AppColors.DarkBlue)
                 .ignoresSafeArea()
         }
         .onChange(of: scenePhase) { _ in

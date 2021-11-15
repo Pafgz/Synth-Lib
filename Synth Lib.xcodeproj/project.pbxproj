@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		962EB158273B02E4002E2576 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962EB157273B02E4002E2576 /* Colors.swift */; };
+		963CB892273BEDD000B07094 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963CB891273BEDD000B07094 /* Dialog.swift */; };
+		964A28402741C27300A31896 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964A283F2741C27300A31896 /* Images.swift */; };
 		966891CD2700CA1400EDF73E /* Synth_LibApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CC2700CA1400EDF73E /* Synth_LibApp.swift */; };
-		966891CF2700CA1400EDF73E /* PresetList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CE2700CA1400EDF73E /* PresetList.swift */; };
+		966891CF2700CA1400EDF73E /* PresetListHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CE2700CA1400EDF73E /* PresetListHome.swift */; };
 		966891D12700CA1400EDF73E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 966891D02700CA1400EDF73E /* Assets.xcassets */; };
 		966891D42700CA1400EDF73E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 966891D32700CA1400EDF73E /* Preview Assets.xcassets */; };
 		966891DD2700D6A500EDF73E /* PresetVm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891DC2700D6A500EDF73E /* PresetVm.swift */; };
@@ -27,9 +30,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		962EB157273B02E4002E2576 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		963CB891273BEDD000B07094 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
+		964A283F2741C27300A31896 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		966891C92700CA1400EDF73E /* Synth Lib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Synth Lib.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966891CC2700CA1400EDF73E /* Synth_LibApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synth_LibApp.swift; sourceTree = "<group>"; };
-		966891CE2700CA1400EDF73E /* PresetList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetList.swift; sourceTree = "<group>"; };
+		966891CE2700CA1400EDF73E /* PresetListHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetListHome.swift; sourceTree = "<group>"; };
 		966891D02700CA1400EDF73E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		966891D32700CA1400EDF73E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		966891D52700CA1400EDF73E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -100,7 +106,7 @@
 		966891DB2700D65D00EDF73E /* Presets */ = {
 			isa = PBXGroup;
 			children = (
-				966891CE2700CA1400EDF73E /* PresetList.swift */,
+				966891CE2700CA1400EDF73E /* PresetListHome.swift */,
 				966891DC2700D6A500EDF73E /* PresetVm.swift */,
 				966891DE2700D6FC00EDF73E /* PresetDetails.swift */,
 				966F921D2701CAE400B8F959 /* PresetDetailsVm.swift */,
@@ -124,6 +130,9 @@
 			children = (
 				966F921B2701C9C500B8F959 /* ImagePicker.swift */,
 				96EFA30727060FFE00F296C7 /* Buttons.swift */,
+				962EB157273B02E4002E2576 /* Colors.swift */,
+				963CB891273BEDD000B07094 /* Dialog.swift */,
+				964A283F2741C27300A31896 /* Images.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -222,16 +231,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				966F4D512703145E00FBC59B /* StringUtils.swift in Sources */,
-				966891CF2700CA1400EDF73E /* PresetList.swift in Sources */,
+				966891CF2700CA1400EDF73E /* PresetListHome.swift in Sources */,
 				9679F1282706F7EC0093D9AE /* DataModel.xcdatamodeld in Sources */,
 				96EFA30827060FFE00F296C7 /* Buttons.swift in Sources */,
+				963CB892273BEDD000B07094 /* Dialog.swift in Sources */,
 				966891DD2700D6A500EDF73E /* PresetVm.swift in Sources */,
 				966F921E2701CAE400B8F959 /* PresetDetailsVm.swift in Sources */,
 				966F92232701E88200B8F959 /* LocalStorage.swift in Sources */,
 				966F921C2701C9C500B8F959 /* ImagePicker.swift in Sources */,
 				966F4D53270315C200FBC59B /* DateUtils.swift in Sources */,
+				962EB158273B02E4002E2576 /* Colors.swift in Sources */,
 				966891CD2700CA1400EDF73E /* Synth_LibApp.swift in Sources */,
 				96EFA30B2706363A00F296C7 /* Preset.swift in Sources */,
+				964A28402741C27300A31896 /* Images.swift in Sources */,
 				966F4D5A27049DF500FBC59B /* CoreStore.swift in Sources */,
 				9669B322270B43FE0042824D /* Tag.swift in Sources */,
 				9679F1242706F4720093D9AE /* CoreDataManager.swift in Sources */,
