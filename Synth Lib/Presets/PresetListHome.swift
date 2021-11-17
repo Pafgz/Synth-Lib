@@ -51,7 +51,7 @@ struct PresetListHome: View {
                     .frame(width: 20, height: 20)
                     .foregroundColor(Color.white)
             })
-        }.accentColor(.white)
+        }
         .alert(isPresented: $isShowingNewPresetNameDialog,
                TextAlert(title: "Create new preset",
                          message: "Enter a name for your preset",
@@ -87,17 +87,15 @@ struct PresetList: View {
     
     var body: some View {
         ScrollView(.vertical) {
-            VStack {
-                ForEach(presets) { preset in
-                    PresetItem(preset: preset,
-                               playDemo: { preset in
-                        print("Press Demo")
-                    },
-                               onClickPreset: onClickPreset
-                    )
-                }
+            ForEach(presets) { preset in
+                PresetItem(preset: preset,
+                           playDemo: { preset in
+                    print("Press Demo")
+                },
+                           onClickPreset: onClickPreset
+                )
             }
-        }.background(AppColors.DarkGrey)
+        }.background(AppColors.DarkBlue)
     }
 }
 
@@ -129,6 +127,7 @@ struct PresetItem: View {
                                 .resizable()
                                 .frame(width: 20, height: 20)
                                 .padding(.trailing, 16)
+                                .foregroundColor(.white)
                         }
                     }
                 }

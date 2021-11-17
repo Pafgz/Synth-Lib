@@ -20,10 +20,6 @@ public class PresetDetailsVm : ObservableObject {
     
     @Published var preset: Preset? = nil
     
-    //    init() {
-    //        preset = Preset(id: UUID(), name: "")
-    //    }
-    
     func setup(coreDataManager: CoreDataManager, currentPreset: Preset?) {
         if(dbManager == nil) {
             dbManager = coreDataManager
