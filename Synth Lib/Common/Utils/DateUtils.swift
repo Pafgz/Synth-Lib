@@ -8,7 +8,23 @@
 import Foundation
 
 extension Date {
-    func currentTimeMillis() -> Int64 {
+    var currentTimeMillis: Int64 {
         return Int64(self.timeIntervalSince1970 * 1000)
     }
+    
+     /**
+      Formats a Date
+
+      - parameters format: (String) for eg dd-MM-yyyy hh-mm-ss
+      */
+     func format(format:String = "dd-MM-yyyy hh-mm-ss") -> Date {
+         let dateFormatter = DateFormatter()
+         dateFormatter.dateFormat = format
+         let dateString = dateFormatter.string(from: self)
+         if let newDate = dateFormatter.date(from: dateString) {
+             return newDate
+         } else {
+             return self
+         }
+     }
 }

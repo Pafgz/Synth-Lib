@@ -6,18 +6,26 @@
 //
 
 import SwiftUI
+import CoreData
 
 
 @main
 struct Synth_LibApp: App {
     
-    let appStore: AppStore = AppStore()
+    let appStore: CoreStore = CoreStore()
+    @StateObject var db = CoreDataManager.shared
+    
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some Scene {
         WindowGroup {
-            PresetList()
-                .background(Color.green)
+            PresetListHome()
+                .environmentObject(db)
+                .background(AppColors.DarkBlue)
                 .ignoresSafeArea()
+        }
+        .onChange(of: scenePhase) { _ in
+            db.save(onConflict: nil)
         }
     }
 }
