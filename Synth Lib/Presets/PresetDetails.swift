@@ -12,14 +12,19 @@ struct PresetDetails: View {
     
     var preset: Preset
     
-    @StateObject var vm = PresetDetailsVm()
+    @ObservedObject var vm = PresetDetailsVm()
     @EnvironmentObject var localStorage: LocalStorage
     @EnvironmentObject var dbManager: CoreDataManager
     
     @State private var showImagePicker = false
     @State private var showNewImageSheet = false
+    @State private var showRecorderSheet = false
+    
     @State private var newPhoto: UIImage?
+    @State private var newRecording: Recording?
+    
     @State private var photoSource: UIImagePickerController.SourceType = .photoLibrary
+    
     @State private var isEditMode = false
     @State private var isDeleted = false
     
@@ -57,7 +62,11 @@ struct PresetDetails: View {
                         }
                     } else if vm.images.count == 1 {
                         if let image = vm.images.first {
-                            PresetImage(image: image, showDeleteButton: isEditMode, onDelete: { image in vm.deleteImage(image: image)}, onClick: { image in })
+                            PresetImage(image: image,
+                                        showDeleteButton: isEditMode,
+                                        onDelete: { image in vm.deleteImage(image: image)
+                            },
+                                        onClick: { image in })
                         }
                     } else {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -80,8 +89,7 @@ struct PresetDetails: View {
                 AppButton(text: "Add a picture", width: 250) {
                     showNewImageSheet = true
                 }
-
-
+                
                 if let tagList = vm.preset?.tagList {
                     if (!tagList.isEmpty) {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -96,10 +104,11 @@ struct PresetDetails: View {
                 
                 Spacer()
                 
-                Text("Sound demos")
-                    .font(.system(size: 28))
-                    .padding(.top, 8)
-                    .foregroundColor(Color.white)
+                RecordingListView(recordingList: vm.recordings) {
+                    showRecorderSheet = true
+                } onClickDemo: { demo in
+                    vm.playSound(recording: demo)
+                }
                 
                 Spacer()
                 
@@ -135,6 +144,16 @@ struct PresetDetails: View {
                 },
                 .cancel()
             ])
+        }
+        .sheet(isPresented: $showRecorderSheet, onDismiss: {
+            vm.stopRecording()
+        }) {
+            RecorderView(isRecording: vm.isRecording, onClickRecord: {
+                if(vm.isRecording) {
+                    showRecorderSheet = false
+                }
+                vm.clickRecord()
+            })
         }
         .navigationBarItems(trailing:
                                 Button(action: {
@@ -237,15 +256,68 @@ struct PresetImage: View  {
                             .resizable()
                             .frame(width: 15, height: 15)
                     }
-                }
-                                    .clipShape(Circle())
-                                    .frame(width: 40, height: 40, alignment: .topTrailing),
-                                  alignment: .topTrailing
-                )
+                }.clipShape(Circle())
+                                    .frame(width: 40, height: 40, alignment: .topTrailing), alignment: .topTrailing)
             } else {
                 imageView
             }
         }
+    }
+}
+
+struct RecordingListView: View  {
+    
+    var recordingList: [Recording]
+    var onClickAddRecording: () -> Void
+    var onClickDemo: (Recording) -> Void
+    
+    public var body: some View {
+        VStack {
+            Text("Sound demos")
+                .font(.system(size: 28))
+                .foregroundColor(Color.white)
+            ForEach(recordingList, id: \.createdAt) { recording in
+                Button(action: {
+                    onClickDemo(recording)
+                }) {
+                    RecordingRow(recording: recording)
+                }
+            }
+            
+            AppButton(text: "Add a demo") {
+                onClickAddRecording()
+            }.frame(width: 250)
+        }
+    }
+}
+
+
+struct RecordingListView_Previews: PreviewProvider {
+    static var previews: some View {
+        RecordingListView(recordingList: RecordingPreviewData.recordingList) {} onClickDemo: {_ in }
+    }
+}
+
+struct RecordingRow: View  {
+    
+    @State var recording: Recording
+    
+    public var body: some View {
+            HStack {
+                Text(recording.fileURL.lastPathComponent)
+                    .foregroundColor(.white)
+                
+                Spacer()
+            }.padding(.horizontal, 16)
+            .frame(height: 40)
+            .background(AppColors.DarkGrey)
+    }
+}
+
+
+struct RecordingRow_Previews: PreviewProvider {
+    static var previews: some View {
+        RecordingRow(recording: RecordingPreviewData.recording1)
     }
 }
 
@@ -273,4 +345,15 @@ struct TagView_Previews: PreviewProvider {
     static var previews: some View {
         TagView(tag: Tag(name: "Moody Horns")) { _ in }
     }
+}
+
+struct RecordingPreviewData {
+    static let recording1: Recording = Recording(fileURL: URL(fileURLWithPath: "Test"), createdAt: Date())
+    static let recording2: Recording = Recording(fileURL: URL(fileURLWithPath: "Check "), createdAt: Date())
+    static let recording3: Recording = Recording(fileURL: URL(fileURLWithPath: "Pad"), createdAt: Date())
+    static let recording4: Recording = Recording(fileURL: URL(fileURLWithPath: "Stacato"), createdAt: Date())
+    
+    static let recording5 = Recording(fileURL: URL(fileURLWithPath: "Speed test"), createdAt: Date())
+    
+    static let recordingList: [Recording] = [recording1, recording2, recording3, recording4]
 }

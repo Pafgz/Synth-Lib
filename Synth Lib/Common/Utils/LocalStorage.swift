@@ -29,10 +29,10 @@ public class LocalStorage: ObservableObject {
     }
     
     func getImages(presetId: UUID) -> [AppImageData]? {
-        let path = getPresetFolder(presetId: presetId)
+        let path = getPresetFolderUrl(presetId: presetId)
         var images = [AppImageData]()
         do {
-            let items = try fileManager.contentsOfDirectory(at: URL(fileURLWithPath: path), includingPropertiesForKeys: nil)
+            let items = try fileManager.contentsOfDirectory(at: path, includingPropertiesForKeys: nil)
                 .filter{ $0.pathExtension == "jpeg" }
             
             for item in items {
@@ -64,6 +64,48 @@ public class LocalStorage: ObservableObject {
         }
     }
     
+    func getRecordings(presetId: UUID) -> [Recording] {
+        var recordings = [Recording]()
+        let documentDirectory = getPresetFolderUrl(presetId: presetId)
+        do {
+            if fileManager.fileExists(atPath: documentDirectory.path) {
+                let directoryContents = try fileManager.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil).filter{ $0.pathExtension == "m4a" }
+                
+                for audio in directoryContents {
+                    let recording = Recording(fileURL: audio, createdAt: getCreationDate(for: audio))
+                    recordings.append(recording)
+                }
+            }
+        } catch {
+            print("Failed to read the folder")
+        }
+        print("Found \(recordings.count) sound demos")
+        return recordings
+    }
+    
+    func deleteRecording(image: AppImageData, presetId: UUID) -> Bool {
+        do {
+            if fileManager.fileExists(atPath: image.path) {
+                try fileManager.removeItem(atPath: image.path)
+                print("Deleted " + image.path)
+                return true
+            }
+            return false
+        } catch {
+            print("Failed to delete file " + image.path)
+            return false
+        }
+    }
+    
+    func getCreationDate(for file: URL) -> Date {
+        if let attributes = try? FileManager.default.attributesOfItem(atPath: file.path) as [FileAttributeKey: Any],
+           let creationDate = attributes[FileAttributeKey.creationDate] as? Date {
+            return creationDate
+        } else {
+            return Date()
+        }
+    }
+    
     func deleteFolder(presetId: UUID) -> Bool {
         let path = getPresetFolder(presetId: presetId)
         do {
@@ -74,7 +116,7 @@ public class LocalStorage: ObservableObject {
                 let filePath = URL(fileURLWithPath: path).appendingPathComponent(file).absoluteURL
                 try fileManager.removeItem(at: filePath)
             }
-           try fileManager.removeItem(atPath: path)
+            try fileManager.removeItem(atPath: path)
             return false
         } catch let error {
             print(error.localizedDescription)
@@ -82,8 +124,7 @@ public class LocalStorage: ObservableObject {
         }
     }
     
-    private func createFolder(folderName: String) -> URL? {
-        
+    func createFolder(folderName: String) -> URL? {
         do {
             let documentUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             
@@ -106,8 +147,12 @@ public class LocalStorage: ObservableObject {
         return paths[0]
     }
     
-    private func getPresetFolder(presetId: UUID) -> String {
-        return getDocumentsDirectory().path + "/" + presetId.uuidString
+    func getPresetFolderUrl(presetId: UUID) -> URL {
+        return getDocumentsDirectory().appendingPathComponent(presetId.uuidString)
+    }
+    
+    func getPresetFolder(presetId: UUID) -> String {
+        return getPresetFolderUrl(presetId: presetId).path
     }
 }
 

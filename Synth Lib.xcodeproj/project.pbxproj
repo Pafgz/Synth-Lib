@@ -10,6 +10,7 @@
 		962EB158273B02E4002E2576 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962EB157273B02E4002E2576 /* Colors.swift */; };
 		963CB892273BEDD000B07094 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963CB891273BEDD000B07094 /* Dialog.swift */; };
 		964A28402741C27300A31896 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964A283F2741C27300A31896 /* Images.swift */; };
+		96525590274515B60027D0D5 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9652558F274515B60027D0D5 /* AudioRecorder.swift */; };
 		966891CD2700CA1400EDF73E /* Synth_LibApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CC2700CA1400EDF73E /* Synth_LibApp.swift */; };
 		966891CF2700CA1400EDF73E /* PresetListHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CE2700CA1400EDF73E /* PresetListHome.swift */; };
 		966891D12700CA1400EDF73E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 966891D02700CA1400EDF73E /* Assets.xcassets */; };
@@ -27,12 +28,14 @@
 		9679F1282706F7EC0093D9AE /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9679F1262706F7EC0093D9AE /* DataModel.xcdatamodeld */; };
 		96EFA30827060FFE00F296C7 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EFA30727060FFE00F296C7 /* Buttons.swift */; };
 		96EFA30B2706363A00F296C7 /* Preset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EFA30A2706363A00F296C7 /* Preset.swift */; };
+		96F8597E27456C0200F247D5 /* RecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F8597D27456C0200F247D5 /* RecorderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		962EB157273B02E4002E2576 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		963CB891273BEDD000B07094 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		964A283F2741C27300A31896 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		9652558F274515B60027D0D5 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		966891C92700CA1400EDF73E /* Synth Lib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Synth Lib.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		966891CC2700CA1400EDF73E /* Synth_LibApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synth_LibApp.swift; sourceTree = "<group>"; };
 		966891CE2700CA1400EDF73E /* PresetListHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetListHome.swift; sourceTree = "<group>"; };
@@ -52,6 +55,7 @@
 		9679F1272706F7EC0093D9AE /* Preset.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Preset.xcdatamodel; sourceTree = "<group>"; };
 		96EFA30727060FFE00F296C7 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		96EFA30A2706363A00F296C7 /* Preset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preset.swift; sourceTree = "<group>"; };
+		96F8597D27456C0200F247D5 /* RecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,7 @@
 				962EB157273B02E4002E2576 /* Colors.swift */,
 				963CB891273BEDD000B07094 /* Dialog.swift */,
 				964A283F2741C27300A31896 /* Images.swift */,
+				96F8597D27456C0200F247D5 /* RecorderView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -144,6 +149,7 @@
 				966F92222701E88200B8F959 /* LocalStorage.swift */,
 				966F4D502703145E00FBC59B /* StringUtils.swift */,
 				966F4D52270315C200FBC59B /* DateUtils.swift */,
+				9652558F274515B60027D0D5 /* AudioRecorder.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -232,9 +238,11 @@
 			files = (
 				966F4D512703145E00FBC59B /* StringUtils.swift in Sources */,
 				966891CF2700CA1400EDF73E /* PresetListHome.swift in Sources */,
+				96525590274515B60027D0D5 /* AudioRecorder.swift in Sources */,
 				9679F1282706F7EC0093D9AE /* DataModel.xcdatamodeld in Sources */,
 				96EFA30827060FFE00F296C7 /* Buttons.swift in Sources */,
 				963CB892273BEDD000B07094 /* Dialog.swift in Sources */,
+				96F8597E27456C0200F247D5 /* RecorderView.swift in Sources */,
 				966891DD2700D6A500EDF73E /* PresetVm.swift in Sources */,
 				966F921E2701CAE400B8F959 /* PresetDetailsVm.swift in Sources */,
 				966F92232701E88200B8F959 /* LocalStorage.swift in Sources */,

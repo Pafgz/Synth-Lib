@@ -7,18 +7,23 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
 
 public class PresetDetailsVm : ObservableObject {
     
-    @Published var images = [AppImageData]()
-    
-    private let notif = NotificationCenter.default
-    
     private let storage = LocalStorage()
-    
+    private var audioRecorder: AudioRecorder?
     private var dbManager: CoreDataManager?
     
+    private var audioPlayer: AVAudioPlayer? = nil
+    
     @Published var preset: Preset? = nil
+    
+    @Published var images = [AppImageData]()
+    
+    @Published var recordings = [Recording]()
+    
+    @Published var isRecording = false
     
     func setup(coreDataManager: CoreDataManager, currentPreset: Preset?) {
         if(dbManager == nil) {
@@ -31,8 +36,12 @@ public class PresetDetailsVm : ObservableObject {
                     } else {
                         preset = try! dbManager!.savePreset(preset: currentPreset)
                     }
+                    if let preset = preset {
+                        audioRecorder = AudioRecorder(preset: preset, storage: storage)
+                    }
+                    loadImages()
+                    loadRecordings()
                 }
-                loadImages()
             } else {
                 print("Opened Nothing")
             }
@@ -50,7 +59,6 @@ public class PresetDetailsVm : ObservableObject {
     func updateName(name: String) {
         if let preset = preset {
             self.preset!.name = name
-            print("Name updated with " + preset.name)
         }
     }
     
@@ -71,6 +79,20 @@ public class PresetDetailsVm : ObservableObject {
         if let preset = preset {
             images = storage.getImages(presetId: preset.id) ?? []
             print("images loaded")
+        }
+    }
+    
+    func loadRecordings() {
+        if let preset = preset {
+            recordings.removeAll()
+            recordings = storage.getRecordings(presetId: preset.id)
+            recordings.sort(by: {
+                $0.createdAt.compare($1.createdAt) == .orderedAscending
+            })
+            print("\(recordings.count) demo loaded")
+            for demo in recordings {
+                print(demo.fileURL)
+            }
         }
     }
     
@@ -96,7 +118,36 @@ public class PresetDetailsVm : ObservableObject {
             }
         }
     }
+    
+    func clickRecord() {
+        if(isRecording) {
+            stopRecording()
+        } else {
+            startRecording()
+        }
+    }
+    
+    func startRecording() {
+        isRecording = true
+        audioRecorder?.startRecording()
+    }
+    
+    func stopRecording() {
+        isRecording = false
+        audioRecorder?.stopRecording()
+        loadRecordings()
+    }
+    
+    func playSound(recording: Recording) {
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: recording.fileURL)
+            audioPlayer?.play()
+        } catch {
+            print("ERROR")
+        }
+    }
 }
+
 
 extension AppImageData {
     func asUIImage() -> UIImage? {
