@@ -106,7 +106,7 @@ public class LocalStorage: ObservableObject {
         }
     }
     
-    func deleteFolder(presetId: UUID) -> Bool {
+    func deleteFolder(presetId: UUID) {
         let path = getPresetFolder(presetId: presetId)
         do {
             let fileName = try fileManager.contentsOfDirectory(atPath: path)
@@ -117,10 +117,8 @@ public class LocalStorage: ObservableObject {
                 try fileManager.removeItem(at: filePath)
             }
             try fileManager.removeItem(atPath: path)
-            return false
         } catch let error {
             print(error.localizedDescription)
-            return false
         }
     }
     

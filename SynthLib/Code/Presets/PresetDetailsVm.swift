@@ -57,7 +57,7 @@ public class PresetDetailsVm : ObservableObject {
     }
     
     func updateName(name: String) {
-        if let preset = preset {
+        if preset != nil {
             self.preset!.name = name
         }
     }

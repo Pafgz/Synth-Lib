@@ -12,7 +12,7 @@ struct AppButton: View {
     
     var text: String
     var fgColor: Color = .white
-    var bgColor: Color = AppColors.Orange
+    var bgColor: Color = R.color.orange.color
     var width: CGFloat = .infinity
     var font: Font = .system(size: 20)
     var onClick: () -> Void

@@ -21,7 +21,7 @@ struct Synth_LibApp: App {
         WindowGroup {
             PresetListHome()
                 .environmentObject(db)
-                .background(AppColors.DarkBlue)
+                .background(R.color.darkBlue.color)
                 .ignoresSafeArea()
         }
         .onChange(of: scenePhase) { _ in

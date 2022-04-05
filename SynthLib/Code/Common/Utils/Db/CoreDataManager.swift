@@ -117,7 +117,6 @@ class CoreDataManager: ObservableObject {
     
     func loadPreset(with id: UUID) throws -> Preset? {
         let result = try loadPresetEntity(with: id)
-        print("loaded \(result?.name) presets")
         return result?.asPreset
     }
     

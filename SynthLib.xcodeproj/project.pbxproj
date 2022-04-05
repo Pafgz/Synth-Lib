@@ -3,13 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		962EB158273B02E4002E2576 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962EB157273B02E4002E2576 /* Colors.swift */; };
 		963CB892273BEDD000B07094 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963CB891273BEDD000B07094 /* Dialog.swift */; };
 		964A28402741C27300A31896 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964A283F2741C27300A31896 /* Images.swift */; };
+		964D329127FC361E006CBD92 /* Rswift in Frameworks */ = {isa = PBXBuildFile; productRef = 964D329027FC361E006CBD92 /* Rswift */; };
+		964D329327FC3780006CBD92 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964D329227FC3780006CBD92 /* R.generated.swift */; };
+		964D329927FC6870006CBD92 /* Images+SL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964D329827FC6870006CBD92 /* Images+SL.swift */; };
+		964D329B27FC6904006CBD92 /* Resources+SL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964D329A27FC6904006CBD92 /* Resources+SL.swift */; };
 		96525590274515B60027D0D5 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9652558F274515B60027D0D5 /* AudioRecorder.swift */; };
 		966891CD2700CA1400EDF73E /* Synth_LibApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CC2700CA1400EDF73E /* Synth_LibApp.swift */; };
 		966891CF2700CA1400EDF73E /* PresetListHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CE2700CA1400EDF73E /* PresetListHome.swift */; };
@@ -32,11 +35,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		962EB157273B02E4002E2576 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		963CB891273BEDD000B07094 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		964A283F2741C27300A31896 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		964D329227FC3780006CBD92 /* R.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
+		964D329827FC6870006CBD92 /* Images+SL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Images+SL.swift"; sourceTree = "<group>"; };
+		964D329A27FC6904006CBD92 /* Resources+SL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resources+SL.swift"; sourceTree = "<group>"; };
 		9652558F274515B60027D0D5 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
-		966891C92700CA1400EDF73E /* Synth Lib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Synth Lib.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		966891C92700CA1400EDF73E /* SynthLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SynthLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		966891CC2700CA1400EDF73E /* Synth_LibApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synth_LibApp.swift; sourceTree = "<group>"; };
 		966891CE2700CA1400EDF73E /* PresetListHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetListHome.swift; sourceTree = "<group>"; };
 		966891D02700CA1400EDF73E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -63,16 +68,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				964D329127FC361E006CBD92 /* Rswift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		964D328E27FC3599006CBD92 /* Code */ = {
+			isa = PBXGroup;
+			children = (
+				966F4D5927049DF500FBC59B /* CoreStore.swift */,
+				966F92192701C9A700B8F959 /* Common */,
+				966891DB2700D65D00EDF73E /* Presets */,
+			);
+			path = Code;
+			sourceTree = "<group>";
+		};
+		964D329727FC6844006CBD92 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				964D329827FC6870006CBD92 /* Images+SL.swift */,
+				964D329A27FC6904006CBD92 /* Resources+SL.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		966891C02700CA1400EDF73E = {
 			isa = PBXGroup;
 			children = (
-				966891CB2700CA1400EDF73E /* Synth Lib */,
+				966891CB2700CA1400EDF73E /* SynthLib */,
 				966891CA2700CA1400EDF73E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -80,23 +105,20 @@
 		966891CA2700CA1400EDF73E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				966891C92700CA1400EDF73E /* Synth Lib.app */,
+				966891C92700CA1400EDF73E /* SynthLib.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		966891CB2700CA1400EDF73E /* Synth Lib */ = {
+		966891CB2700CA1400EDF73E /* SynthLib */ = {
 			isa = PBXGroup;
 			children = (
-				966F92192701C9A700B8F959 /* Common */,
-				966891DB2700D65D00EDF73E /* Presets */,
+				96AF600327DD279200CCD1B7 /* Resources */,
+				964D328E27FC3599006CBD92 /* Code */,
 				966891CC2700CA1400EDF73E /* Synth_LibApp.swift */,
-				966891D02700CA1400EDF73E /* Assets.xcassets */,
-				966891D52700CA1400EDF73E /* Info.plist */,
 				966891D22700CA1400EDF73E /* Preview Content */,
-				966F4D5927049DF500FBC59B /* CoreStore.swift */,
 			);
-			path = "Synth Lib";
+			path = SynthLib;
 			sourceTree = "<group>";
 		};
 		966891D22700CA1400EDF73E /* Preview Content */ = {
@@ -123,6 +145,7 @@
 		966F92192701C9A700B8F959 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				964D329727FC6844006CBD92 /* Extensions */,
 				966F92212701E86F00B8F959 /* Utils */,
 				966F921A2701C9B200B8F959 /* UI */,
 			);
@@ -134,7 +157,6 @@
 			children = (
 				966F921B2701C9C500B8F959 /* ImagePicker.swift */,
 				96EFA30727060FFE00F296C7 /* Buttons.swift */,
-				962EB157273B02E4002E2576 /* Colors.swift */,
 				963CB891273BEDD000B07094 /* Dialog.swift */,
 				964A283F2741C27300A31896 /* Images.swift */,
 				96F8597D27456C0200F247D5 /* RecorderView.swift */,
@@ -163,13 +185,24 @@
 			path = Db;
 			sourceTree = "<group>";
 		};
+		96AF600327DD279200CCD1B7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				964D329227FC3780006CBD92 /* R.generated.swift */,
+				966891D52700CA1400EDF73E /* Info.plist */,
+				966891D02700CA1400EDF73E /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		966891C82700CA1400EDF73E /* Synth Lib */ = {
+		966891C82700CA1400EDF73E /* SynthLib */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 966891D82700CA1400EDF73E /* Build configuration list for PBXNativeTarget "Synth Lib" */;
+			buildConfigurationList = 966891D82700CA1400EDF73E /* Build configuration list for PBXNativeTarget "SynthLib" */;
 			buildPhases = (
+				964D328C27FC353F006CBD92 /* Run R.Swift */,
 				966891C52700CA1400EDF73E /* Sources */,
 				966891C62700CA1400EDF73E /* Frameworks */,
 				966891C72700CA1400EDF73E /* Resources */,
@@ -178,11 +211,12 @@
 			);
 			dependencies = (
 			);
-			name = "Synth Lib";
+			name = SynthLib;
 			packageProductDependencies = (
+				964D329027FC361E006CBD92 /* Rswift */,
 			);
 			productName = "Synth Lib";
-			productReference = 966891C92700CA1400EDF73E /* Synth Lib.app */;
+			productReference = 966891C92700CA1400EDF73E /* SynthLib.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -199,7 +233,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 966891C42700CA1400EDF73E /* Build configuration list for PBXProject "Synth Lib" */;
+			buildConfigurationList = 966891C42700CA1400EDF73E /* Build configuration list for PBXProject "SynthLib" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -209,12 +243,13 @@
 			);
 			mainGroup = 966891C02700CA1400EDF73E;
 			packageReferences = (
+				964D328F27FC361E006CBD92 /* XCRemoteSwiftPackageReference "R.swift" */,
 			);
 			productRefGroup = 966891CA2700CA1400EDF73E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				966891C82700CA1400EDF73E /* Synth Lib */,
+				966891C82700CA1400EDF73E /* SynthLib */,
 			);
 		};
 /* End PBXProject section */
@@ -231,6 +266,29 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		964D328C27FC353F006CBD92 /* Run R.Swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
+			);
+			name = "Run R.Swift";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/SynthLib/Resources/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"/opt/homebrew/bin:$PATH\"\nif which rswift >/dev/null; then\n  rswift generate \"$SRCROOT/SynthLib/Resources/R.generated.swift\"\nelse\n  echo \"warning: R.Swift not installed\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		966891C52700CA1400EDF73E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -244,13 +302,15 @@
 				963CB892273BEDD000B07094 /* Dialog.swift in Sources */,
 				96F8597E27456C0200F247D5 /* RecorderView.swift in Sources */,
 				966891DD2700D6A500EDF73E /* PresetVm.swift in Sources */,
+				964D329327FC3780006CBD92 /* R.generated.swift in Sources */,
 				966F921E2701CAE400B8F959 /* PresetDetailsVm.swift in Sources */,
+				964D329B27FC6904006CBD92 /* Resources+SL.swift in Sources */,
 				966F92232701E88200B8F959 /* LocalStorage.swift in Sources */,
 				966F921C2701C9C500B8F959 /* ImagePicker.swift in Sources */,
 				966F4D53270315C200FBC59B /* DateUtils.swift in Sources */,
-				962EB158273B02E4002E2576 /* Colors.swift in Sources */,
 				966891CD2700CA1400EDF73E /* Synth_LibApp.swift in Sources */,
 				96EFA30B2706363A00F296C7 /* Preset.swift in Sources */,
+				964D329927FC6870006CBD92 /* Images+SL.swift in Sources */,
 				964A28402741C27300A31896 /* Images.swift in Sources */,
 				966F4D5A27049DF500FBC59B /* CoreStore.swift in Sources */,
 				9669B322270B43FE0042824D /* Tag.swift in Sources */,
@@ -384,10 +444,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Synth Lib/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = SynthLib/Resources/Assets.xcassets;
 				DEVELOPMENT_TEAM = P77B3F8GQ5;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "Synth Lib/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/SynthLib/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -396,7 +456,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "paf.Synth-Lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -406,10 +466,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Synth Lib/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = SynthLib/Resources/Assets.xcassets;
 				DEVELOPMENT_TEAM = P77B3F8GQ5;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "Synth Lib/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/SynthLib/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -418,14 +478,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "paf.Synth-Lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		966891C42700CA1400EDF73E /* Build configuration list for PBXProject "Synth Lib" */ = {
+		966891C42700CA1400EDF73E /* Build configuration list for PBXProject "SynthLib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				966891D62700CA1400EDF73E /* Debug */,
@@ -434,7 +494,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		966891D82700CA1400EDF73E /* Build configuration list for PBXNativeTarget "Synth Lib" */ = {
+		966891D82700CA1400EDF73E /* Build configuration list for PBXNativeTarget "SynthLib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				966891D92700CA1400EDF73E /* Debug */,
@@ -444,6 +504,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		964D328F27FC361E006CBD92 /* XCRemoteSwiftPackageReference "R.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mac-cain13/R.swift.Library";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		964D329027FC361E006CBD92 /* Rswift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 964D328F27FC361E006CBD92 /* XCRemoteSwiftPackageReference "R.swift" */;
+			productName = Rswift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		9679F1262706F7EC0093D9AE /* DataModel.xcdatamodeld */ = {

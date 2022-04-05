@@ -17,7 +17,7 @@ struct PresetListHome: View {
     var body: some View {
         NavigationView {
             ZStack {
-                AppColors.DarkBlue.ignoresSafeArea()
+                R.color.darkBlue.color.ignoresSafeArea()
                 
                 VStack {
                     if(vm.presets.isEmpty) {
@@ -95,7 +95,7 @@ struct PresetList: View {
                            onClickPreset: onClickPreset
                 )
             }
-        }.background(AppColors.DarkBlue)
+        }.background(R.color.darkBlue.color)
     }
 }
 
@@ -114,7 +114,7 @@ struct PresetItem: View {
     var body: some View {
         Button(action: { onClickPreset(preset) }) {
             ZStack {
-                AppColors.DarkGrey
+                R.color.darkGrey.color
                 HStack() {
                     Text(preset.name)
                         .foregroundColor(Color.white)

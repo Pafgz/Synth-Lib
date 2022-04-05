@@ -40,7 +40,7 @@ struct PresetDetails: View {
         }
         
         ZStack {
-            AppColors.DarkBlue.ignoresSafeArea()
+            R.color.darkBlue.color.ignoresSafeArea()
             ScrollView {
                 VStack() {
                     TextField("Preset Name", text: presetName, onCommit: {
@@ -113,7 +113,7 @@ struct PresetDetails: View {
                 Spacer()
                 
                 if(isEditMode) {
-                    AppButton(text: "Delete Preset", bgColor: AppColors.Red) {
+                    AppButton(text: "Delete Preset", bgColor: R.color.red.color) {
                         isDeleted = vm.deletePreset()
                         if(isDeleted) {
                             presentationMode.wrappedValue.dismiss()
@@ -211,7 +211,7 @@ struct AddImageItem: View  {
                     .scaledToFill()
                     .padding(.all, 64)
                     .foregroundColor(Color.white)
-                    .background(AppColors.LightGrey)
+                    .background(R.color.lightGrey.color)
             }
         }
         .frame(width: 250, height: 250, alignment: .center)
@@ -251,7 +251,7 @@ struct PresetImage: View  {
                     onDelete(self.image)
                 }) {
                     ZStack {
-                        AppColors.DarkGrey
+                        R.color.darkGrey.color
                         Image(systemName: "xmark")
                             .resizable()
                             .frame(width: 15, height: 15)
@@ -310,7 +310,7 @@ struct RecordingRow: View  {
                 Spacer()
             }.padding(.horizontal, 16)
             .frame(height: 40)
-            .background(AppColors.DarkGrey)
+            .background(R.color.darkGrey.color)
     }
 }
 
