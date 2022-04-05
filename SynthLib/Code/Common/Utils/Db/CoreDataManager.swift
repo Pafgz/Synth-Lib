@@ -100,7 +100,6 @@ class CoreDataManager: ObservableObject {
             let entity = presetList[index]
             context().delete(entity)
             presetList.remove(at: index)
-            print("Deleted from DB \(entity.name)")
         }
     }
     
@@ -177,7 +176,6 @@ class CoreDataManager: ObservableObject {
     private func updatePresetInList(entity: PresetEntity) {
         if let i = presetList.firstIndex(where: { $0.id == entity.id }) {
             presetList[i] = entity
-            print("Preset at \(i) is \(presetList[i].name)")
         }
     }
     

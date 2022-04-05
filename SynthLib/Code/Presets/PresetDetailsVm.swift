@@ -9,35 +9,37 @@ import Foundation
 import SwiftUI
 import AVFoundation
 
-public class PresetDetailsVm : ObservableObject {
-    
-    private let storage = LocalStorage()
+final class PresetDetailsVm : ObservableObject {
+
     private var audioRecorder: AudioRecorder?
-    private var dbManager: CoreDataManager?
     
     private var audioPlayer: AVAudioPlayer? = nil
     
     @Published var preset: Preset? = nil
     
+    @Published var presetName: String = "No name"
+    
+    @Published var newPhoto: UIImage?
     @Published var images = [AppImageData]()
     
+    @Published var newRecording: Recording?
     @Published var recordings = [Recording]()
     
     @Published var isRecording = false
+    @Published var isEditMode = false
+    @Published var isDeleted = false
     
-    func setup(coreDataManager: CoreDataManager, currentPreset: Preset?) {
-        if(dbManager == nil) {
-            dbManager = coreDataManager
+    init(currentPreset: Preset?) {
             if let currentPreset = currentPreset {
                 print("Opened " + currentPreset.name)
                 do {
-                    if let existingPreset = try? dbManager!.loadPreset(with: currentPreset.id) {
+                    if let existingPreset = try? CoreDataManager.shared.loadPreset(with: currentPreset.id) {
                         preset = existingPreset
                     } else {
-                        preset = try! dbManager!.savePreset(preset: currentPreset)
+                        preset = try! CoreDataManager.shared.savePreset(preset: currentPreset)
                     }
                     if let preset = preset {
-                        audioRecorder = AudioRecorder(preset: preset, storage: storage)
+                        audioRecorder = AudioRecorder(preset: preset, storage: LocalStorage.shared)
                     }
                     loadImages()
                     loadRecordings()
@@ -45,12 +47,15 @@ public class PresetDetailsVm : ObservableObject {
             } else {
                 print("Opened Nothing")
             }
+        
+        if let preset = preset {
+            presetName = preset.name
         }
     }
     
     func storePicture(inputImage: UIImage) {
         if let preset = preset {
-            if let imageData = try? storage.saveImage(inputImage: inputImage, presetId: preset.id) {
+            if let imageData = try? LocalStorage.shared.saveImage(inputImage: inputImage, presetId: preset.id) {
                 images.append(imageData)
             }
         }
@@ -64,20 +69,18 @@ public class PresetDetailsVm : ObservableObject {
     
     func savePreset() {
         if let preset = preset {
-            if let dbManager = dbManager {
                 do {
-                    try self.preset = dbManager.savePreset(preset: preset)
+                    try self.preset = CoreDataManager.shared.savePreset(preset: preset)
                     print("Preset Saved")
                 } catch {
                     print("Error saving a preset")
-                }
             }
         }
     }
     
     func loadImages() {
         if let preset = preset {
-            images = storage.getImages(presetId: preset.id) ?? []
+            images = LocalStorage.shared.getImages(presetId: preset.id) ?? []
             print("images loaded")
         }
     }
@@ -85,7 +88,7 @@ public class PresetDetailsVm : ObservableObject {
     func loadRecordings() {
         if let preset = preset {
             recordings.removeAll()
-            recordings = storage.getRecordings(presetId: preset.id)
+            recordings = LocalStorage.shared.getRecordings(presetId: preset.id)
             recordings.sort(by: {
                 $0.createdAt.compare($1.createdAt) == .orderedAscending
             })
@@ -96,18 +99,17 @@ public class PresetDetailsVm : ObservableObject {
         }
     }
     
-    func deletePreset() -> Bool {
+    func deletePreset(onSuccess: () -> Void) {
         if let preset = preset {
-            storage.deleteFolder(presetId: preset.id)
-            dbManager?.deletePreset(preset: preset)
-            return true
+            LocalStorage.shared.deleteFolder(presetId: preset.id)
+            CoreDataManager.shared.deletePreset(preset: preset)
+            onSuccess()
         }
-        return false
     }
     
     func deleteImage(image: AppImageData) {
         if let preset = preset {
-            let isDeleted = storage.deletePicture(image: image, presetId: preset.id)
+            let isDeleted = LocalStorage.shared.deletePicture(image: image, presetId: preset.id)
             if(isDeleted) {
                 let i = images.firstIndex { item in
                     item.path == image.path
@@ -119,7 +121,7 @@ public class PresetDetailsVm : ObservableObject {
         }
     }
     
-    func clickRecord() {
+    func onTapRecord() {
         if(isRecording) {
             stopRecording()
         } else {

@@ -9,43 +9,73 @@ import SwiftUI
 import Combine
 
 struct PresetDetails: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    var preset: Preset
+    @StateObject private var vm: PresetDetailsVm
     
-    @ObservedObject var vm = PresetDetailsVm()
-    @EnvironmentObject var localStorage: LocalStorage
-    @EnvironmentObject var dbManager: CoreDataManager
+    init(preset: Preset?) {
+        _vm = StateObject(wrappedValue: PresetDetailsVm(currentPreset: preset)
+        )
+    }
+    
+    var body: some View {
+        PresetDetailsContent(
+            preset: vm.preset,
+            presetName: $vm.presetName,
+            newPhoto: $vm.newPhoto,
+            isEditMode: $vm.isEditMode,
+            images: vm.images,
+            recordings: vm.recordings,
+            onTapSavePreset: vm.savePreset,
+            onTapAddImage: vm.storePicture,
+            onTapDeleteImage: vm.deleteImage,
+            onStopRecording: vm.stopRecording,
+            onTapPlay: vm.playSound,
+            onTapRecord: vm.onTapRecord,
+            onTapDeletePreset: {
+                vm.deletePreset {
+                    presentationMode.wrappedValue.dismiss()
+                }
+        } )
+    }
+}
+
+struct PresetDetailsContent: View {
+    @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
     
     @State private var showImagePicker = false
     @State private var showNewImageSheet = false
     @State private var showRecorderSheet = false
     
-    @State private var newPhoto: UIImage?
-    @State private var newRecording: Recording?
+    let preset: Preset?
+    
+    @Binding var presetName: String
+    @Binding var newPhoto: UIImage?
+    @Binding var isEditMode: Bool
+    
+    let images: [AppImageData]
+    let recordings: [Recording]
+    let isRecording = false
+    
+    let onTapSavePreset: () -> Void
+    let onTapAddImage: (UIImage) -> Void
+    let onTapDeleteImage: (AppImageData) -> Void
+    let onStopRecording: () -> Void
+    let onTapPlay: (Recording) -> Void
+    let onTapRecord: () -> Void
+    let onTapDeletePreset: () -> Void
     
     @State private var photoSource: UIImagePickerController.SourceType = .photoLibrary
     
-    @State private var isEditMode = false
-    @State private var isDeleted = false
-    
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
     var body: some View {
-        
-        let presetName: Binding<String> = Binding { () -> String in
-            return vm.preset?.name ?? "No name"
-        } set: { value in
-            print("Changing name with " + value)
-            vm.updateName(name: value)
-        }
         
         ZStack {
             R.color.darkBlue.color.ignoresSafeArea()
             ScrollView {
                 VStack() {
-                    TextField("Preset Name", text: presetName, onCommit: {
+                    TextField("Preset Name", text: $presetName, onCommit: {
                         print("Saving preset after changing the name")
-                        vm.savePreset()
+                        onTapSavePreset()
                     })
                         .foregroundColor(Color.white)
                         .font(.system(size: 32))
@@ -54,27 +84,27 @@ struct PresetDetails: View {
                         .padding(.bottom, 16)
                         .contentShape(Rectangle())
                     
-                    if(vm.images.isEmpty) {
+                    if(images.isEmpty) {
                         Button(action: {
                             showNewImageSheet = true
                         }) {
                             AddImageItem()
                         }
-                    } else if vm.images.count == 1 {
-                        if let image = vm.images.first {
+                    } else if images.count == 1 {
+                        if let image = images.first {
                             PresetImage(image: image,
                                         showDeleteButton: isEditMode,
-                                        onDelete: { image in vm.deleteImage(image: image)
+                                        onDelete: { image in onTapDeleteImage(image)
                             },
                                         onClick: { image in })
                         }
                     } else {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
-                                ForEach(vm.images) { image in
+                                ForEach(images) { image in
                                     PresetImage(image: image, showDeleteButton: isEditMode,
                                                 onDelete: { image in
-                                        vm.deleteImage(image: image)
+                                        onTapDeleteImage(image)
                                         
                                     },
                                                 onClick: { image in
@@ -90,7 +120,7 @@ struct PresetDetails: View {
                     showNewImageSheet = true
                 }
                 
-                if let tagList = vm.preset?.tagList {
+                if let tagList = preset?.tagList {
                     if (!tagList.isEmpty) {
                         ScrollView(.horizontal, showsIndicators: false) {
                             List() {
@@ -104,20 +134,17 @@ struct PresetDetails: View {
                 
                 Spacer()
                 
-                RecordingListView(recordingList: vm.recordings) {
+                RecordingListView(recordingList: recordings) {
                     showRecorderSheet = true
                 } onClickDemo: { demo in
-                    vm.playSound(recording: demo)
+                    onTapPlay(demo)
                 }
                 
                 Spacer()
                 
                 if(isEditMode) {
                     AppButton(text: "Delete Preset", bgColor: R.color.red.color) {
-                        isDeleted = vm.deletePreset()
-                        if(isDeleted) {
-                            presentationMode.wrappedValue.dismiss()
-                        }
+                        onTapDeletePreset()
                     }
                     .padding(16)
                 }
@@ -127,7 +154,7 @@ struct PresetDetails: View {
         }
         .sheet(isPresented: $showImagePicker, onDismiss:{
             if let newPhoto = newPhoto {
-                vm.storePicture(inputImage: newPhoto)
+                onTapAddImage(newPhoto)
             }
         }) {
             ImagePicker(sourceType: photoSource, image: $newPhoto)
@@ -146,43 +173,26 @@ struct PresetDetails: View {
             ])
         }
         .sheet(isPresented: $showRecorderSheet, onDismiss: {
-            vm.stopRecording()
+            onStopRecording()
         }) {
-            RecorderView(isRecording: vm.isRecording, onClickRecord: {
-                if(vm.isRecording) {
+            RecorderView(isRecording: isRecording, onClickRecord: {
+                if(isRecording) {
                     showRecorderSheet = false
                 }
-                vm.clickRecord()
+                onTapRecord()
             })
         }
         .navigationBarItems(trailing:
                                 Button(action: {
-            isEditMode = !isEditMode
+            isEditMode.toggle()
         }) {
             Text("Edit")
-        })
-        .onAppear(perform: {
-            print(preset.name)
-            vm.setup(coreDataManager: dbManager, currentPreset: preset)
         })
     }
 }
 
 struct PresetDetails_Previews: PreviewProvider {
     static var previews: some View {
-        let db = CoreDataManager.shared
-        Group {
-            PresetDetails(preset: PresetPreviewData.preset1)
-                .previewDevice(PreviewDevice(rawValue: "iPhone 6s"))
-                .previewDisplayName("iPhone 6s")
-                .environmentObject(db)
-        }
-    }
-}
-
-struct PresetDetailsWithPreset_Previews: PreviewProvider {
-    static var previews: some View {
-        let db = CoreDataManager.shared
         let preset = Preset(id: UUID(), name: "Peneloppe Horns", tagList: [
             Tag(name: "Horn"),
             Tag(name: "Air"),
@@ -190,12 +200,20 @@ struct PresetDetailsWithPreset_Previews: PreviewProvider {
             Tag(name: "Chill"),
             Tag(name: "Melancholy")
         ])
-        Group {
-            PresetDetails(preset: preset)
-                .previewDevice(PreviewDevice(rawValue: "iPhone 6s"))
-                .previewDisplayName("iPhone 6s")
-                .environmentObject(db)
-        }
+        PresetDetailsContent(
+            preset: preset,
+            presetName: .constant("Flutes"),
+            newPhoto: .constant(nil),
+            isEditMode: .constant(true),
+            images: [], recordings: [],
+            onTapSavePreset: {},
+            onTapAddImage: {_ in},
+            onTapDeleteImage: {_ in},
+            onStopRecording: {},
+            onTapPlay: { _ in},
+            onTapRecord: {},
+            onTapDeletePreset: {}
+        )
     }
 }
 

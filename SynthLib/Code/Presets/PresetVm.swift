@@ -10,25 +10,22 @@ import UIKit
 import Combine
 import NotificationCenter
 
-public class PresetVm : ObservableObject {
+final class PresetVm : ObservableObject {
     
-    private var dbManager: CoreDataManager?
-    
-    private var cancellable: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
     
     @Published var presets = [Preset]()
     
     @Published var selectedPreset: Preset = Preset(id: UUID(), name: "Unamed Preset")
     
-    func setup(coreDataManager: CoreDataManager) {
-        dbManager = coreDataManager
-        if let dbManager = dbManager {
-            cancellable = dbManager.$presetList.sink { values in
+    init() {
+        CoreDataManager.shared.$presetList
+            .sink { values in
                 self.presets = values.compactMap { entity in
                     entity.asPreset
                 }
-            }
         }
+        .store(in: &cancellables)
     }
     
     func updateNewPresetName(name: String) {

@@ -9,10 +9,28 @@ import SwiftUI
 
 struct PresetListHome: View {
     
-    @StateObject var vm: PresetVm = PresetVm()
-    @EnvironmentObject var dbManager: CoreDataManager
+    @StateObject private var vm: PresetVm
     @State private var isShowingNewPresetNameDialog = false
     @State private var navigateToPresetDetails = false
+    
+    init() {
+        _vm = StateObject(wrappedValue:
+            PresetVm()
+        )
+    }
+    
+    var body: some View {
+        PresetListHomeContent(presets: vm.presets, selectedPreset: $vm.selectedPreset, updateNewPresetName: vm.updateNewPresetName)
+    }
+}
+
+struct PresetListHomeContent: View {
+    
+    let presets: [Preset]
+    @Binding var selectedPreset: Preset
+    @State var isShowingNewPresetNameDialog = false
+    @State var navigateToPresetDetails = false
+    let updateNewPresetName: (String) -> Void
     
     var body: some View {
         NavigationView {
@@ -20,7 +38,7 @@ struct PresetListHome: View {
                 R.color.darkBlue.color.ignoresSafeArea()
                 
                 VStack {
-                    if(vm.presets.isEmpty) {
+                    if(presets.isEmpty) {
                         Text("No preset")
                             .font(.system(size: 28))
                             .foregroundColor(Color.white)
@@ -31,15 +49,15 @@ struct PresetListHome: View {
                             }
                         Spacer().frame(height: 250)
                     } else {
-                        PresetList(presets: vm.presets, onClickPreset: { preset in
-                            vm.selectedPreset = preset
+                        PresetList(presets: presets, onClickPreset: { preset in
+                            selectedPreset = preset
                             navigateToPresetDetails = true
                         })
                     }
                     
                     NavigationLink(destination:
-                                    PresetDetails(preset: vm.selectedPreset)
-                                    .environmentObject(dbManager)
+                                    PresetDetails(preset: selectedPreset
+                                    )
                                     .foregroundColor(.white), isActive: $navigateToPresetDetails) { EmptyView() }
                 }
             }.navigationBarItems(trailing:
@@ -57,20 +75,14 @@ struct PresetListHome: View {
                          message: "Enter a name for your preset",
                          keyboardType: .default) { result in
             if let text = result {
-                vm.updateNewPresetName(name: text)
+                updateNewPresetName(text)
                 navigateToPresetDetails = true
-                isShowingNewPresetNameDialog = false
-            } else {
-                isShowingNewPresetNameDialog = false
             }
+                isShowingNewPresetNameDialog = false
         })
-        .onAppear {
-            vm.setup(coreDataManager: dbManager)
-        }
         .ignoresSafeArea()
     }
 }
-
 
 
 struct PresetListHome_Previews: PreviewProvider {

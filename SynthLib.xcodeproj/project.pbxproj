@@ -23,7 +23,6 @@
 		9669B322270B43FE0042824D /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669B321270B43FE0042824D /* Tag.swift */; };
 		966F4D512703145E00FBC59B /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F4D502703145E00FBC59B /* StringUtils.swift */; };
 		966F4D53270315C200FBC59B /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F4D52270315C200FBC59B /* DateUtils.swift */; };
-		966F4D5A27049DF500FBC59B /* CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F4D5927049DF500FBC59B /* CoreStore.swift */; };
 		966F921C2701C9C500B8F959 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F921B2701C9C500B8F959 /* ImagePicker.swift */; };
 		966F921E2701CAE400B8F959 /* PresetDetailsVm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F921D2701CAE400B8F959 /* PresetDetailsVm.swift */; };
 		966F92232701E88200B8F959 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966F92222701E88200B8F959 /* LocalStorage.swift */; };
@@ -52,9 +51,8 @@
 		9669B321270B43FE0042824D /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		966F4D502703145E00FBC59B /* StringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUtils.swift; sourceTree = "<group>"; };
 		966F4D52270315C200FBC59B /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
-		966F4D5927049DF500FBC59B /* CoreStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreStore.swift; sourceTree = "<group>"; };
 		966F921B2701C9C500B8F959 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
-		966F921D2701CAE400B8F959 /* PresetDetailsVm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetDetailsVm.swift; sourceTree = "<group>"; };
+		966F921D2701CAE400B8F959 /* PresetDetailsVm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PresetDetailsVm.swift; path = SynthLib/Code/Presets/PresetDetailsVm.swift; sourceTree = SOURCE_ROOT; };
 		966F92222701E88200B8F959 /* LocalStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
 		9679F1232706F4720093D9AE /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		9679F1272706F7EC0093D9AE /* Preset.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Preset.xcdatamodel; sourceTree = "<group>"; };
@@ -78,7 +76,6 @@
 		964D328E27FC3599006CBD92 /* Code */ = {
 			isa = PBXGroup;
 			children = (
-				966F4D5927049DF500FBC59B /* CoreStore.swift */,
 				966F92192701C9A700B8F959 /* Common */,
 				966891DB2700D65D00EDF73E /* Presets */,
 			);
@@ -92,6 +89,15 @@
 				964D329A27FC6904006CBD92 /* Resources+SL.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		964D329C27FC6AD9006CBD92 /* PresetDetails */ = {
+			isa = PBXGroup;
+			children = (
+				966891DE2700D6FC00EDF73E /* PresetDetails.swift */,
+				966F921D2701CAE400B8F959 /* PresetDetailsVm.swift */,
+			);
+			path = PresetDetails;
 			sourceTree = "<group>";
 		};
 		966891C02700CA1400EDF73E = {
@@ -132,10 +138,9 @@
 		966891DB2700D65D00EDF73E /* Presets */ = {
 			isa = PBXGroup;
 			children = (
+				964D329C27FC6AD9006CBD92 /* PresetDetails */,
 				966891CE2700CA1400EDF73E /* PresetListHome.swift */,
 				966891DC2700D6A500EDF73E /* PresetVm.swift */,
-				966891DE2700D6FC00EDF73E /* PresetDetails.swift */,
-				966F921D2701CAE400B8F959 /* PresetDetailsVm.swift */,
 				96EFA30A2706363A00F296C7 /* Preset.swift */,
 				9669B321270B43FE0042824D /* Tag.swift */,
 			);
@@ -312,7 +317,6 @@
 				96EFA30B2706363A00F296C7 /* Preset.swift in Sources */,
 				964D329927FC6870006CBD92 /* Images+SL.swift in Sources */,
 				964A28402741C27300A31896 /* Images.swift in Sources */,
-				966F4D5A27049DF500FBC59B /* CoreStore.swift in Sources */,
 				9669B322270B43FE0042824D /* Tag.swift in Sources */,
 				9679F1242706F4720093D9AE /* CoreDataManager.swift in Sources */,
 				966891DF2700D6FC00EDF73E /* PresetDetails.swift in Sources */,

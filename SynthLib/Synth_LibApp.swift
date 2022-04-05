@@ -12,20 +12,16 @@ import CoreData
 @main
 struct Synth_LibApp: App {
     
-    let appStore: CoreStore = CoreStore()
-    @StateObject var db = CoreDataManager.shared
-    
     @Environment(\.scenePhase) var scenePhase
     
     var body: some Scene {
         WindowGroup {
             PresetListHome()
-                .environmentObject(db)
                 .background(R.color.darkBlue.color)
                 .ignoresSafeArea()
         }
         .onChange(of: scenePhase) { _ in
-            db.save(onConflict: nil)
+            CoreDataManager.shared.save(onConflict: nil)
         }
     }
 }

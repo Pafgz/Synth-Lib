@@ -11,6 +11,8 @@ import Photos
 
 public class LocalStorage: ObservableObject {
     
+    static let shared = LocalStorage()
+    
     let fileManager = FileManager.default
     
     func saveImage(inputImage: UIImage, presetId: UUID) throws -> AppImageData? {
