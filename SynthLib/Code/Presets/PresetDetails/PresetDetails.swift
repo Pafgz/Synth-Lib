@@ -30,18 +30,21 @@ struct PresetDetails: View {
             onTapAddImage: vm.storePicture,
             onTapDeleteImage: vm.deleteImage,
             onStopRecording: vm.stopRecording,
-            onTapPlay: vm.playSound,
+            onTapPlay: vm.togglePlayRecording,
             onTapRecord: vm.onTapRecord,
             onTapDeletePreset: {
                 vm.deletePreset {
                     presentationMode.wrappedValue.dismiss()
                 }
-        } )
+            }
+        )
     }
 }
 
 struct PresetDetailsContent: View {
-    @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    @State private var photoSource: UIImagePickerController.SourceType = .photoLibrary
     
     @State private var showImagePicker = false
     @State private var showNewImageSheet = false
@@ -65,14 +68,12 @@ struct PresetDetailsContent: View {
     let onTapRecord: () -> Void
     let onTapDeletePreset: () -> Void
     
-    @State private var photoSource: UIImagePickerController.SourceType = .photoLibrary
-    
     var body: some View {
-        
         ZStack {
             R.color.darkBlue.color.ignoresSafeArea()
             ScrollView {
                 VStack() {
+                    
                     TextField("Preset Name", text: $presetName, onCommit: {
                         print("Saving preset after changing the name")
                         onTapSavePreset()
@@ -105,10 +106,7 @@ struct PresetDetailsContent: View {
                                     PresetImage(image: image, showDeleteButton: isEditMode,
                                                 onDelete: { image in
                                         onTapDeleteImage(image)
-                                        
-                                    },
-                                                onClick: { image in
-                                        
+                                    }, onClick: { image in
                                     })
                                 }
                             }
@@ -136,8 +134,10 @@ struct PresetDetailsContent: View {
                 
                 RecordingListView(recordingList: recordings) {
                     showRecorderSheet = true
-                } onClickDemo: { demo in
+                } onTapDemo: { demo in
                     onTapPlay(demo)
+                } onDeleteDemo: { recording in
+                    
                 }
                 
                 Spacer()
@@ -182,12 +182,23 @@ struct PresetDetailsContent: View {
                 onTapRecord()
             })
         }
-        .navigationBarItems(trailing:
-                                Button(action: {
-            isEditMode.toggle()
-        }) {
-            Text("Edit")
-        })
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(leading: Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }, label: {
+                    Image(systemName: "chevron.left")
+                    .frame(width: 40, height: 40)
+                    .foregroundColor(.white)
+        }), trailing:
+            Button(action: {
+            withAnimation {
+                isEditMode.toggle()
+            }
+            }) {
+                Text("Edit")
+            }
+        )
     }
 }
 
@@ -253,7 +264,7 @@ struct PresetImage: View  {
     
     public var body: some View {
         if let image = image.asUIImage() {
-            let imageView = ZStack {
+            ZStack {
                 Button(action: { onClick(self.image) }) {
                     Image(uiImage: image)
                         .resizable()
@@ -262,23 +273,23 @@ struct PresetImage: View  {
                         .frame(width: 250, height: 250, alignment: .center)
                         .clipped()
                 }
-            }.frame(width: 260, height: 260)
-            
-            if(showDeleteButton) {
-                imageView.overlay(Button(action: {
-                    onDelete(self.image)
-                }) {
-                    ZStack {
-                        R.color.darkGrey.color
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                    }
-                }.clipShape(Circle())
-                                    .frame(width: 40, height: 40, alignment: .topTrailing), alignment: .topTrailing)
-            } else {
-                imageView
             }
+                .frame(width: 260, height: 260)
+                .if(showDeleteButton) {
+                    $0.overlay(Button(action: {
+                        onDelete(self.image)
+                    }) {
+                        ZStack {
+                            R.color.darkGrey.color
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .frame(width: 15, height: 15)
+                        }
+                    }.clipShape(Circle())
+                    .frame(width: 40, height: 40, alignment:
+                            .topTrailing), alignment: .topTrailing)
+                    .fade()
+                }
         }
     }
 }
@@ -286,8 +297,9 @@ struct PresetImage: View  {
 struct RecordingListView: View  {
     
     var recordingList: [Recording]
-    var onClickAddRecording: () -> Void
-    var onClickDemo: (Recording) -> Void
+    var onTapAddRecording: () -> Void
+    var onTapDemo: (Recording) -> Void
+    var onDeleteDemo: (Recording) -> Void
     
     public var body: some View {
         VStack {
@@ -296,23 +308,40 @@ struct RecordingListView: View  {
                 .foregroundColor(Color.white)
             ForEach(recordingList, id: \.createdAt) { recording in
                 Button(action: {
-                    onClickDemo(recording)
-                }) {
+                    onTapDemo(recording)
+                }, label: {
                     RecordingRow(recording: recording)
+                })
+                .swipeActions(edge: .trailing) {
+                    deleteButton(recording: recording)
                 }
             }
             
             AppButton(text: "Add a demo") {
-                onClickAddRecording()
-            }.frame(width: 250)
+                onTapAddRecording()
+            }
+            .frame(width: 250)
+            .padding(recordingList.isEmpty ? 0 : 16)
         }
+    }
+    
+    private func deleteButton(recording: Recording) -> some View {
+        Button(action: {
+            delete(recording: recording)
+        }, label: {
+            Text("Delete")
+        })
+    }
+    
+    func delete(recording: Recording) {
+        onDeleteDemo(recording)
     }
 }
 
 
 struct RecordingListView_Previews: PreviewProvider {
     static var previews: some View {
-        RecordingListView(recordingList: RecordingPreviewData.recordingList) {} onClickDemo: {_ in }
+        RecordingListView(recordingList: RecordingPreviewData.recordingList) {} onTapDemo: {_ in } onDeleteDemo: {_ in}
     }
 }
 
@@ -326,7 +355,8 @@ struct RecordingRow: View  {
                     .foregroundColor(.white)
                 
                 Spacer()
-            }.padding(.horizontal, 16)
+            }
+            .padding(.horizontal, 16)
             .frame(height: 40)
             .background(R.color.darkGrey.color)
     }

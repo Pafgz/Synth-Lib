@@ -13,6 +13,8 @@
 		964D329327FC3780006CBD92 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964D329227FC3780006CBD92 /* R.generated.swift */; };
 		964D329927FC6870006CBD92 /* Images+SL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964D329827FC6870006CBD92 /* Images+SL.swift */; };
 		964D329B27FC6904006CBD92 /* Resources+SL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964D329A27FC6904006CBD92 /* Resources+SL.swift */; };
+		964D32A128003AAB006CBD92 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 964D32A028003AAB006CBD92 /* PartialSheet */; };
+		964D32A328003C80006CBD92 /* View+SL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964D32A228003C80006CBD92 /* View+SL.swift */; };
 		96525590274515B60027D0D5 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9652558F274515B60027D0D5 /* AudioRecorder.swift */; };
 		966891CD2700CA1400EDF73E /* Synth_LibApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CC2700CA1400EDF73E /* Synth_LibApp.swift */; };
 		966891CF2700CA1400EDF73E /* PresetListHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966891CE2700CA1400EDF73E /* PresetListHome.swift */; };
@@ -39,6 +41,7 @@
 		964D329227FC3780006CBD92 /* R.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
 		964D329827FC6870006CBD92 /* Images+SL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Images+SL.swift"; sourceTree = "<group>"; };
 		964D329A27FC6904006CBD92 /* Resources+SL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resources+SL.swift"; sourceTree = "<group>"; };
+		964D32A228003C80006CBD92 /* View+SL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+SL.swift"; sourceTree = "<group>"; };
 		9652558F274515B60027D0D5 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		966891C92700CA1400EDF73E /* SynthLib.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SynthLib.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		966891CC2700CA1400EDF73E /* Synth_LibApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synth_LibApp.swift; sourceTree = "<group>"; };
@@ -66,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				964D32A128003AAB006CBD92 /* PartialSheet in Frameworks */,
 				964D329127FC361E006CBD92 /* Rswift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,6 +91,7 @@
 			children = (
 				964D329827FC6870006CBD92 /* Images+SL.swift */,
 				964D329A27FC6904006CBD92 /* Resources+SL.swift */,
+				964D32A228003C80006CBD92 /* View+SL.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -219,6 +224,7 @@
 			name = SynthLib;
 			packageProductDependencies = (
 				964D329027FC361E006CBD92 /* Rswift */,
+				964D32A028003AAB006CBD92 /* PartialSheet */,
 			);
 			productName = "Synth Lib";
 			productReference = 966891C92700CA1400EDF73E /* SynthLib.app */;
@@ -249,6 +255,7 @@
 			mainGroup = 966891C02700CA1400EDF73E;
 			packageReferences = (
 				964D328F27FC361E006CBD92 /* XCRemoteSwiftPackageReference "R.swift" */,
+				964D329F28003AAB006CBD92 /* XCRemoteSwiftPackageReference "PartialSheet" */,
 			);
 			productRefGroup = 966891CA2700CA1400EDF73E /* Products */;
 			projectDirPath = "";
@@ -308,6 +315,7 @@
 				96F8597E27456C0200F247D5 /* RecorderView.swift in Sources */,
 				966891DD2700D6A500EDF73E /* PresetVm.swift in Sources */,
 				964D329327FC3780006CBD92 /* R.generated.swift in Sources */,
+				964D32A328003C80006CBD92 /* View+SL.swift in Sources */,
 				966F921E2701CAE400B8F959 /* PresetDetailsVm.swift in Sources */,
 				964D329B27FC6904006CBD92 /* Resources+SL.swift in Sources */,
 				966F92232701E88200B8F959 /* LocalStorage.swift in Sources */,
@@ -377,7 +385,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -432,7 +440,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -452,7 +460,7 @@
 				DEVELOPMENT_TEAM = P77B3F8GQ5;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/SynthLib/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -474,7 +482,7 @@
 				DEVELOPMENT_TEAM = P77B3F8GQ5;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/SynthLib/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -518,6 +526,14 @@
 				kind = branch;
 			};
 		};
+		964D329F28003AAB006CBD92 /* XCRemoteSwiftPackageReference "PartialSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AndreaMiotto/PartialSheet";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -525,6 +541,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 964D328F27FC361E006CBD92 /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = Rswift;
+		};
+		964D32A028003AAB006CBD92 /* PartialSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 964D329F28003AAB006CBD92 /* XCRemoteSwiftPackageReference "PartialSheet" */;
+			productName = PartialSheet;
 		};
 /* End XCSwiftPackageProductDependency section */
 

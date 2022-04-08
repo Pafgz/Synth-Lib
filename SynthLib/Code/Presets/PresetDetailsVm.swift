@@ -13,7 +13,8 @@ final class PresetDetailsVm : ObservableObject {
 
     private var audioRecorder: AudioRecorder?
     
-    private var audioPlayer: AVAudioPlayer? = nil
+    private var player: AVPlayer? = nil
+    private var isPlaying: Bool = false
     
     @Published var preset: Preset? = nil
     
@@ -140,13 +141,22 @@ final class PresetDetailsVm : ObservableObject {
         loadRecordings()
     }
     
-    func playSound(recording: Recording) {
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: recording.fileURL)
-            audioPlayer?.play()
-        } catch {
-            print("ERROR")
-        }
+    func togglePlayRecording(recording: Recording) {
+            NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
+            player = AVPlayer(playerItem: AVPlayerItem(url: recording.fileURL))
+            NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+            if(isPlaying) {
+                player?.pause()
+                isPlaying = false
+            } else {
+                player?.play()
+                isPlaying = true
+            }
+    }
+     
+    @objc func playerDidFinishPlaying() {
+        player?.seek(to: .zero)
+        isPlaying = false
     }
 }
 

@@ -7,7 +7,7 @@
 
 import SwiftUI
 import CoreData
-
+import PartialSheet
 
 @main
 struct Synth_LibApp: App {
@@ -19,6 +19,7 @@ struct Synth_LibApp: App {
             PresetListHome()
                 .background(R.color.darkBlue.color)
                 .ignoresSafeArea()
+                .attachPartialSheetToRoot()
         }
         .onChange(of: scenePhase) { _ in
             CoreDataManager.shared.save(onConflict: nil)
